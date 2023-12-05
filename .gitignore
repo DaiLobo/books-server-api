@@ -1,0 +1,5 @@
+# Arquivos de configuração locais
+.env
+
+# Diretórios de dependências (node_modules, por exemplo)
+/node_modules

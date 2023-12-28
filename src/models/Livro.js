@@ -11,7 +11,19 @@ const bookSchema = new mongoose.Schema(
     publisher: { type: String, required: [true, "A editora é obrigatória"] },
     author: { type: authorSchema, required: [true, "O autor é obrigatório"] },
     price: { type: Number },
-    pages: { type: Number },
+    pages: {
+      type: Number,
+      // min: [10, "O número mínimo de páginas é 10. Valor fornecido {VALUE}"],
+      // max: [1000, "O número máximo de páginas é 1000"],
+      //Validação personalizada
+      validate: {
+        validator: (value) => {
+          return value >= 10 && value <= 1000;
+        },
+        message:
+          "O número de páginas deve estar entre 10 e 1000. Valor fornecido: {VALUE}",
+      },
+    },
   },
   { versionKey: false }
 );

@@ -2,6 +2,7 @@ import express from "express";
 import connectDataBase from "./config/dbConnect.js";
 import routes from "./routes/index.js";
 import errorManipulate from "./middlewares/errorManipulate.js";
+import manipulate404 from "./middlewares/manipulate404.js";
 
 const connection = await connectDataBase();
 
@@ -15,6 +16,8 @@ connection.once("open", () => {
 
 const app = express();
 routes(app);
+
+app.use(manipulate404);
 
 app.use(errorManipulate);
 // app.use(express.json());

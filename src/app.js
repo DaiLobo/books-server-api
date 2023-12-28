@@ -1,6 +1,7 @@
 import express from "express";
 import connectDataBase from "./config/dbConnect.js";
 import routes from "./routes/index.js";
+import errorManipulate from "./middlewares/errorManipulate.js";
 
 const connection = await connectDataBase();
 
@@ -14,6 +15,8 @@ connection.once("open", () => {
 
 const app = express();
 routes(app);
+
+app.use(errorManipulate);
 // app.use(express.json());
 
 // app.get("/", (req, res) => {
@@ -42,11 +45,11 @@ routes(app);
 //   res.status(200).send(livros);
 // });
 
-app.delete("/livros/:id", (req, res) => {
-  const index = getBookById(req.params.id);
-  livros.splice(index, 1);
+// app.delete("/livros/:id", (req, res) => {
+//   const index = getBookById(req.params.id);
+//   livros.splice(index, 1);
 
-  res.status(200).send("Livro removido");
-});
+//   res.status(200).send("Livro removido");
+// });
 
 export default app;

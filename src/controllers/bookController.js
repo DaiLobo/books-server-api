@@ -3,8 +3,21 @@ import { book, author } from "../models/index.js";
 class BookController {
   static async listBook(req, res, next) {
     try {
-      const bookList = await book.find({});
-      res.status(200).json(bookList);
+      const { limit = 5, pag = 1, sortBy = "title", sort = 1 } = req.query;
+      const totalbooks = (await book.find({})).length;
+
+      const bookList = await book
+        .find({})
+        .sort({ [sortBy]: parseInt(sort) })
+        .skip((pag - 1) * limit)
+        .limit(limit);
+
+      res.status(200).json({
+        list: bookList,
+        pag: pag,
+        totalPag: Math.ceil(totalbooks / limit),
+        totalbooks,
+      });
     } catch (error) {
       next(error);
       // res
@@ -107,6 +120,7 @@ class BookController {
         const authors = await book.find({
           "author.name": { $regex: authorName, $options: "i" },
         });
+
         res.status(200).json(authors);
         return;
       }

@@ -1,3 +1,4 @@
+import "./GlobalValidade.js";
 import { author } from "./Autor.js";
 import book from "./Livro.js";
 

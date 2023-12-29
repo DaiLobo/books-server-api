@@ -9,7 +9,7 @@ const authorSchema = new mongoose.Schema(
     },
     nacionality: { type: String },
   },
-  { vversionKey: false }
+  { versionKey: false }
 );
 
 const author = mongoose.model("autores", authorSchema);

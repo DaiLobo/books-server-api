@@ -1,5 +1,4 @@
-import { author } from "../models/Autor.js";
-import { book } from "../models/index.js";
+import { book, author } from "../models/index.js";
 
 class BookController {
   static async listBook(req, res, next) {
@@ -81,12 +80,39 @@ class BookController {
     }
   }
 
-  static async listBookByPublisher(req, res, next) {
-    const publisher = req.query.editora;
+  // static async listBookByPublisher(req, res, next) {
+  //   const publisher = req.query.editora;
+
+  //   try {
+  //     const bookByPublisher = await book.find({ publisher: publisher });
+  //     res.status(200).json(bookByPublisher);
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
+
+  static async listBookByFilter(req, res, next) {
+    // const publisher = req.query.editora;
 
     try {
-      const bookByPublisher = await book.find({ publisher: publisher });
-      res.status(200).json(bookByPublisher);
+      const { publisher, title, authorName } = req.query;
+      const regexTitle = new RegExp(title, "i");
+
+      const search = {};
+
+      if (publisher) search.publisher = { $regex: publisher, $options: "i" };
+      if (title) search.title = regexTitle;
+
+      if (authorName) {
+        const authors = await book.find({
+          "author.name": { $regex: authorName, $options: "i" },
+        });
+        res.status(200).json(authors);
+        return;
+      }
+
+      const bookResult = await book.find(search);
+      res.status(200).json(bookResult);
     } catch (error) {
       next(error);
     }
